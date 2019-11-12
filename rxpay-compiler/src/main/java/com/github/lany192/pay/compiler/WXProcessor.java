@@ -1,14 +1,14 @@
 package com.github.lany192.pay.compiler;
 
 
+import com.github.lany192.pay.annotation.WXPay;
+import com.github.lany192.pay.compiler.utils.BaseProcessor;
+import com.github.lany192.pay.compiler.utils.ClassEntity;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.github.lany192.pay.annotation.WXPay;
-import com.github.lany192.pay.compiler.utils.BaseProcessor;
-import com.github.lany192.pay.compiler.utils.ClassEntity;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;

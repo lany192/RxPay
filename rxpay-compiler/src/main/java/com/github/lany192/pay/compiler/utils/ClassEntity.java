@@ -17,6 +17,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 public class ClassEntity {
+    List<? extends AnnotationMirror> annotationMirrors;
     private WeakReference<TypeElement> elementWeakCache;
     private Name classSimpleName;
     private Name classQualifiedName;
@@ -24,7 +25,6 @@ public class ClassEntity {
     private Set<Modifier> modifierSet;
     private String className;
     private String superclass;
-    List<? extends AnnotationMirror> annotationMirrors;
     private List<String> interfaces = new ArrayList<>();
     private Map<String, FieldEntity> fields = new HashMap<>();
     private Map<String, MethodEntity> methods = new HashMap<>();
@@ -42,14 +42,14 @@ public class ClassEntity {
         annotationMirrors = element.getAnnotationMirrors();
         this.classSimpleName = element.getSimpleName();
         this.classQualifiedName = element.getQualifiedName();
-        if ("java.lang.Object".equals(element.getSuperclass().toString())){
+        if ("java.lang.Object".equals(element.getSuperclass().toString())) {
             this.superclass = null;
-        }else{
+        } else {
             this.superclass = element.getSuperclass().toString();
         }
         List<? extends TypeMirror> interfaces = element.getInterfaces();
 
-        for (TypeMirror anInterface : interfaces){
+        for (TypeMirror anInterface : interfaces) {
             this.interfaces.add(typeUtils.asElement(anInterface).toString());
         }
     }
@@ -111,8 +111,8 @@ public class ClassEntity {
                     "\tFieldValue:\n" + item.getValue().toString() + "\n");
         }
         for (Map.Entry<String, MethodEntity> item : methods.entrySet()) {
-            methodString.append("Methodkey:"+ item.getKey()+
-                    "\tMethodValue:\n"+ item.getValue().toString()+"\n");
+            methodString.append("Methodkey:" + item.getKey() +
+                    "\tMethodValue:\n" + item.getValue().toString() + "\n");
         }
         for (int i = 0; i < interfaces.size(); i++) {
             interfacesString.append("interfaces__index:" + i + ":" + interfaces.get(i));

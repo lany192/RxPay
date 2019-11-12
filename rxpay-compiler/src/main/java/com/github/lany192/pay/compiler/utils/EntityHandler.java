@@ -51,10 +51,10 @@ public class EntityHandler {
         this.env = env;
         for (Class<? extends Annotation> support : processor.getSupportedAnnotations()) {
             for (Element element : env.getElementsAnnotatedWith(support)) {
-                if (element.getKind() == ElementKind.FIELD){
+                if (element.getKind() == ElementKind.FIELD) {
                     handlerField((VariableElement) element);
                 }
-                if (element.getKind() == ElementKind.METHOD){
+                if (element.getKind() == ElementKind.METHOD) {
                     handlerMethod((ExecutableElement) element);
                 }
                 if (element.getKind() == ElementKind.CLASS) {
@@ -92,7 +92,7 @@ public class EntityHandler {
         printNormalMsg(methodEntity.toString());
 
         String className = methodEntity.getClassSimpleName();
-        if (classEntityMap.get(className) == null){
+        if (classEntityMap.get(className) == null) {
             classEntityMap.put(className,
                     new ClassEntity(elementUtils, typeUtils,
                             (TypeElement) element.getEnclosingElement()));

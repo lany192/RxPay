@@ -14,30 +14,30 @@ import io.reactivex.subjects.Subject;
 
 public class BusUtil {
 
-    private HashMap<String, CompositeDisposable> mSubscriptionMap;
     private static volatile BusUtil mBusUtil;
     private final Subject<Object> mSubject;
-    
+    private HashMap<String, CompositeDisposable> mSubscriptionMap;
+
+    public BusUtil() {
+        mSubject = PublishSubject.create().toSerialized();
+    }
+
     //单列模式
-    public static BusUtil getDefault(){
-        if (mBusUtil == null){
-            synchronized (BusUtil.class){
-                if (mBusUtil == null){
+    public static BusUtil getDefault() {
+        if (mBusUtil == null) {
+            synchronized (BusUtil.class) {
+                if (mBusUtil == null) {
                     mBusUtil = new BusUtil();
                 }
             }
         }
         return mBusUtil;
     }
-    
-    public BusUtil(){
-        mSubject = PublishSubject.create().toSerialized();
-    }
 
-    public void post(Object o){
+    public void post(Object o) {
         mSubject.onNext(o);
     }
-    
+
     /**
      * 返回指定类型的带背压的Flowable实例
      *
@@ -45,10 +45,11 @@ public class BusUtil {
      * @param type
      * @return
      */
-    public <T>Flowable<T> toObservable(Class<T> type){
+    public <T> Flowable<T> toObservable(Class<T> type) {
         return mSubject.toFlowable(BackpressureStrategy.BUFFER)
                 .ofType(type);
     }
+
     /**
      * 一个默认的订阅方法
      *
@@ -58,13 +59,13 @@ public class BusUtil {
      * @param error
      * @return
      */
-    public <T> Disposable doSubscribe(Class<T> type, Consumer<T> next, Consumer<Throwable> error){
+    public <T> Disposable doSubscribe(Class<T> type, Consumer<T> next, Consumer<Throwable> error) {
         return toObservable(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(next, error);
     }
-    
+
     /**
      * 是否已有观察者订阅
      *
@@ -73,9 +74,10 @@ public class BusUtil {
     public boolean hasObservers() {
         return mSubject.hasObservers();
     }
-    
+
     /**
      * 保存订阅后的disposable
+     *
      * @param o
      * @param disposable
      */
@@ -97,6 +99,7 @@ public class BusUtil {
 
     /**
      * 取消订阅
+     *
      * @param o
      */
     public void unSubscribe(Object o) {
@@ -105,10 +108,10 @@ public class BusUtil {
         }
 
         String key = o.getClass().getName();
-        if (!mSubscriptionMap.containsKey(key)){
+        if (!mSubscriptionMap.containsKey(key)) {
             return;
         }
-        
+
         CompositeDisposable compositeDisposable = mSubscriptionMap.get(key);
         if (compositeDisposable != null) {
             compositeDisposable.dispose();

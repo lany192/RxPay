@@ -64,7 +64,7 @@ public class RxAliPay {
                     }
                 })
                 .compose(RxPayUtils.checkAliPayResult())
-                .compose(RxPayUtils.<PayResult> applySchedulers());
+                .compose(RxPayUtils.<PayResult>applySchedulers());
     }
 
 }

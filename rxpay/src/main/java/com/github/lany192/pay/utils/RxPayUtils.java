@@ -50,13 +50,13 @@ public class RxPayUtils {
 
     public static <T> ObservableTransformer<T, T> applySchedulers() {
         return new ObservableTransformer<T, T>() {
-                    @Override
-                    public ObservableSource<T> apply(Observable<T> observable) {
-                        return observable
-                                .subscribeOn(Schedulers.io())
-                                .unsubscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread());
-                    }
-                };
+            @Override
+            public ObservableSource<T> apply(Observable<T> observable) {
+                return observable
+                        .subscribeOn(Schedulers.io())
+                        .unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
     }
 }

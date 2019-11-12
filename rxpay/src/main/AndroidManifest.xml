@@ -8,32 +8,32 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
-        
+
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"/>
-        
+            android:screenOrientation="behind" />
+
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"/>
+            android:screenOrientation="behind" />
 
         <activity
             android:name="com.github.lany192.pay.wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity-alias
             android:name="${applicationId}.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:targetActivity="com.github.lany192.pay.wxapi.WXPayEntryActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
     </application>
 
 </manifest>

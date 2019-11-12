@@ -12,6 +12,7 @@ import javax.lang.model.util.Types;
 
 public class MethodEntity implements Entity {
     private final String packageName;
+    private final String classQualifiedName;
     private ExecutableElement methodElement;
     private String returnType;
     private List<? extends VariableElement> parameterElements;
@@ -20,7 +21,6 @@ public class MethodEntity implements Entity {
     private String methodName;
     private List<? extends TypeMirror> exceptionTypes;
     private String classSimpleName;
-    private final String classQualifiedName;
 
     public MethodEntity(ExecutableElement methodElement, Types typeMirror, Elements elementUtils) {
         this.methodElement = methodElement;

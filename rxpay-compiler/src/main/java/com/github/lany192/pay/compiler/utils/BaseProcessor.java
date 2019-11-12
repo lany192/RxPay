@@ -11,9 +11,10 @@ import javax.lang.model.util.Elements;
 public abstract class BaseProcessor extends AbstractProcessor {
     protected EntityHandler entityHandler;
     protected boolean useAndroidX = false;
-    
+
     /**
      * 被注解处理工具调用
+     *
      * @param processingEnv 提供了Element，Filer，Messager等工具
      */
     @Override

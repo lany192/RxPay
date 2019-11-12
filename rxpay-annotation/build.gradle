@@ -1,7 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.weilu.pay.annotation'
+group = 'com.weilu.pay.annotation'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])

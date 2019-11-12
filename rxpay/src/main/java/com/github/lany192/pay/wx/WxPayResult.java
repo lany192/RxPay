@@ -20,7 +20,7 @@ public class WxPayResult {
 
     public String getErrInfo() {
         String result = "";
-        switch (errCode){
+        switch (errCode) {
             case 0:
                 result = "支付成功";
                 break;
@@ -37,12 +37,12 @@ public class WxPayResult {
                 result = "您未安装最新版本微信，不支持微信支付，请安装或升级微信版本";
                 break;
             default:
-                 break;
+                break;
         }
         return result;
     }
 
-    public boolean isSucceed(){
+    public boolean isSucceed() {
         // errCode 为0则代表支付成功
         return errCode == 0;
     }

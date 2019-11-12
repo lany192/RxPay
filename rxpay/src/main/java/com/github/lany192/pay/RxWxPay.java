@@ -5,16 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import com.tencent.mm.opensdk.constants.Build;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.github.lany192.pay.exception.PayFailedException;
 import com.github.lany192.pay.utils.BusUtil;
 import com.github.lany192.pay.utils.ErrCode;
 import com.github.lany192.pay.utils.RxPayUtils;
 import com.github.lany192.pay.wx.WxPayResult;
+import com.tencent.mm.opensdk.constants.Build;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -24,6 +24,15 @@ import io.reactivex.functions.Consumer;
 
 public class RxWxPay {
     private static RxWxPay singleton;
+    private static Application context;
+    private static BroadcastReceiver receiver;
+    private String partnerId;
+    private String noncestr;
+    private String timestamp;
+    private String prepayId;
+    private String sign;
+    private String appID;
+    private WXPayBean payBean;
 
     public static RxWxPay getInstance() {
         if (singleton == null) {
@@ -37,13 +46,10 @@ public class RxWxPay {
         return singleton;
     }
 
-    private static Application context;
-    private static BroadcastReceiver receiver;
-    
     public static void init(Application application) {
         context = application;
 
-        if (receiver == null){
+        if (receiver == null) {
             try {
                 Class c = Class.forName(context.getPackageName() + ".AppRegister");
                 receiver = (BroadcastReceiver) c.getDeclaredConstructor().newInstance();
@@ -53,20 +59,6 @@ public class RxWxPay {
             }
         }
     }
-
-    private String partnerId;
-
-    private String noncestr;
-
-    private String timestamp;
-
-    private String prepayId;
-
-    private String sign;
-
-    private String appID;
-
-    private WXPayBean payBean;
 
     public RxWxPay withAppID(String appId) {
         this.appID = appId;
@@ -123,71 +115,71 @@ public class RxWxPay {
             prepayId = payBean.prepayId;
             sign = payBean.sign;
         }
-       
+
         return Observable.create(new ObservableOnSubscribe<WxPayResult>() {
-                            @Override
-                            public void subscribe(final ObservableEmitter<WxPayResult> emitter) {
-                                if (emitter.isDisposed()) {
-                                    return;
-                                }
+            @Override
+            public void subscribe(final ObservableEmitter<WxPayResult> emitter) {
+                if (emitter.isDisposed()) {
+                    return;
+                }
 
-                                String checkResult = checkIsEmpty();
-                                
-                                if (!isEmpty(checkResult)) {
-                                    emitter.onError(new PayFailedException(String.valueOf(ErrCode.PARAMETER_IS_NULL), checkResult + " cannot be null"));
-                                    emitter.onComplete();
-                                    return;
-                                }
-                                
-                                if (context == null) {
-                                    emitter.onError(new PayFailedException(String.valueOf(ErrCode.NOT_INIT), "you have not init the WxPay in your Application!"));
-                                    emitter.onComplete();
-                                    return;
-                                }
+                String checkResult = checkIsEmpty();
 
-                                final IWXAPI msgApi = WXAPIFactory.createWXAPI(context, null);
-                                // 将该app注册到微信
-                                msgApi.registerApp(payBean.getAppId());
-                                
-                                if (msgApi.getWXAppSupportAPI() < Build.PAY_SUPPORTED_SDK_INT) {
-                                    emitter.onNext(new WxPayResult(ErrCode.NOT_INSTALLED_WECHAT));
-                                    emitter.onComplete();
-                                    return;
-                                }
-                                PayReq request = new PayReq();
-                                request.appId = payBean.appId;
-                                request.partnerId = payBean.partnerId;
-                                request.prepayId = payBean.prepayId;
-                                request.packageValue = "Sign=WXPay";
-                                request.nonceStr = payBean.noncestr;
-                                request.timeStamp = payBean.timestamp;
-                                request.sign = payBean.sign;
-                                boolean isSend = msgApi.sendReq(request);
-                                if (!isSend) {
-                                    emitter.onNext(new WxPayResult(-1));
-                                    emitter.onComplete();
-                                } else {
-                                    Disposable disposable = BusUtil.getDefault()
-                                            .doSubscribe(
-                                                    BaseResp.class, new Consumer<BaseResp>() {
-                                                        @Override
-                                                        public void accept(BaseResp baseResp) {
-                                                            emitter.onNext(new WxPayResult(baseResp.errCode));
-                                                            emitter.onComplete();
-                                                        }
-                                                    },
-                                                    new Consumer<Throwable>() {
-                                                        @Override
-                                                        public void accept(Throwable throwable) {
-                                                            Log.e("NewsMainPresenter", throwable.toString());
-                                                        }
-                                                    });
-                                    BusUtil.getDefault().addSubscription(payBean, disposable);
-                                }
-                            }
-                        })
-                        .compose(RxPayUtils.checkWechatResult())
-                        .compose(RxPayUtils.<WxPayResult> applySchedulers());
+                if (!isEmpty(checkResult)) {
+                    emitter.onError(new PayFailedException(String.valueOf(ErrCode.PARAMETER_IS_NULL), checkResult + " cannot be null"));
+                    emitter.onComplete();
+                    return;
+                }
+
+                if (context == null) {
+                    emitter.onError(new PayFailedException(String.valueOf(ErrCode.NOT_INIT), "you have not init the WxPay in your Application!"));
+                    emitter.onComplete();
+                    return;
+                }
+
+                final IWXAPI msgApi = WXAPIFactory.createWXAPI(context, null);
+                // 将该app注册到微信
+                msgApi.registerApp(payBean.getAppId());
+
+                if (msgApi.getWXAppSupportAPI() < Build.PAY_SUPPORTED_SDK_INT) {
+                    emitter.onNext(new WxPayResult(ErrCode.NOT_INSTALLED_WECHAT));
+                    emitter.onComplete();
+                    return;
+                }
+                PayReq request = new PayReq();
+                request.appId = payBean.appId;
+                request.partnerId = payBean.partnerId;
+                request.prepayId = payBean.prepayId;
+                request.packageValue = "Sign=WXPay";
+                request.nonceStr = payBean.noncestr;
+                request.timeStamp = payBean.timestamp;
+                request.sign = payBean.sign;
+                boolean isSend = msgApi.sendReq(request);
+                if (!isSend) {
+                    emitter.onNext(new WxPayResult(-1));
+                    emitter.onComplete();
+                } else {
+                    Disposable disposable = BusUtil.getDefault()
+                            .doSubscribe(
+                                    BaseResp.class, new Consumer<BaseResp>() {
+                                        @Override
+                                        public void accept(BaseResp baseResp) {
+                                            emitter.onNext(new WxPayResult(baseResp.errCode));
+                                            emitter.onComplete();
+                                        }
+                                    },
+                                    new Consumer<Throwable>() {
+                                        @Override
+                                        public void accept(Throwable throwable) {
+                                            Log.e("NewsMainPresenter", throwable.toString());
+                                        }
+                                    });
+                    BusUtil.getDefault().addSubscription(payBean, disposable);
+                }
+            }
+        })
+                .compose(RxPayUtils.checkWechatResult())
+                .compose(RxPayUtils.<WxPayResult>applySchedulers());
     }
 
     private String checkIsEmpty() {
@@ -200,10 +192,14 @@ public class RxWxPay {
     }
 
     public void onDestroy() {
-        if (payBean != null){
+        if (payBean != null) {
             BusUtil.getDefault().unSubscribe(payBean);
             payBean = null;
         }
+    }
+
+    private boolean isEmpty(CharSequence str) {
+        return str == null || str.length() == 0;
     }
 
     public static class WXPayBean {
@@ -252,9 +248,5 @@ public class RxWxPay {
         public String getSign() {
             return sign;
         }
-    }
-
-    private boolean isEmpty(CharSequence str) {
-        return str == null || str.length() == 0;
     }
 }

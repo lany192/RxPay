@@ -1,9 +1,9 @@
 package com.github.lany192.pay.exception;
 
 public class PayFailedException extends RuntimeException {
-    
-    private String errCode; 
-    
+
+    private String errCode;
+
     public PayFailedException(String detailMessage) {
         super(detailMessage);
     }
