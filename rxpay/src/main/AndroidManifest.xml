@@ -22,7 +22,7 @@
             android:screenOrientation="behind"/>
 
         <activity
-            android:name="com.weilu.pay.api.wxapi.WXPayEntryActivity"
+            android:name="com.github.lany192.pay.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:launchMode="singleTop" />
@@ -31,7 +31,7 @@
             android:name="${applicationId}.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:targetActivity="com.weilu.pay.api.wxapi.WXPayEntryActivity"
+            android:targetActivity="com.github.lany192.pay.wxapi.WXPayEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         
     </application>
