@@ -1,7 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.lany192.pay.complier'
+group = 'com.github.lany192'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
