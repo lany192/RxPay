@@ -25,10 +25,8 @@ public abstract class BaseProcessor extends AbstractProcessor {
     }
 
     private boolean hasAndroidX(Elements elementUtils) {
-        boolean annotationsPresent
-                = elementUtils.getTypeElement("androidx.annotation.NonNull") != null;
-        boolean corePresent
-                = elementUtils.getTypeElement("androidx.core.content.ContextCompat") != null;
+        boolean annotationsPresent = elementUtils.getTypeElement("androidx.annotation.NonNull") != null;
+        boolean corePresent = elementUtils.getTypeElement("androidx.core.content.ContextCompat") != null;
         return annotationsPresent && corePresent;
     }
 

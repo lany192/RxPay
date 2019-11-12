@@ -10,8 +10,8 @@ dependencies {
     api project(':rxpay-annotation')
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 //指定编译的编码
 tasks.withType(JavaCompile) {

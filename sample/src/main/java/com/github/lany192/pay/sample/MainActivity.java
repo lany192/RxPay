@@ -13,8 +13,6 @@ import com.github.lany192.pay.ali.PayResult;
 import com.github.lany192.pay.annotation.WXPay;
 import com.github.lany192.pay.exception.PayFailedException;
 import com.github.lany192.pay.wx.WxPayResult;
-import com.weilu.pay.BuildConfig;
-import com.weilu.pay.R;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
